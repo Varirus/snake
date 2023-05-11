@@ -18,7 +18,9 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 # Create a list with all .cpp source files
 set(project_sources
     main.cpp
-
+    Controller.cpp
+    GameManager.cpp
+    View.cpp
 )
 
 # Create executable with all necessary source files
