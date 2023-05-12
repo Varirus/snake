@@ -1,21 +1,49 @@
 #include "GameManager.h"
 #include <algorithm>
 
-GameManager::GameManager()
-    : board()
+GameManager::GameManager(DifficultyLevel diff)
+    : board(), difficulty(diff)
 {
+    state = RUNNING;
+    difficulty = HARD;
     init_snake();
+    init_gameDifficulty();
+    relocateApple();
+
+    //DEBUG
+    apple.col = 23;
+    apple.row = 20;
 }
+
+int GameManager::getSnakeSpeed() { return snakeSpeed; }
 
 void GameManager::init_snake()
 {
     Position starting;
-    starting.col = 19;
-    starting.row = 19;
+    starting.col = BoardSizeCol/2;
+    starting.row = BoardSizeRow/2;
     snake.push(starting);
-
     facing = EAST;
     pendingGrow = 5;
+}
+
+void GameManager::init_gameDifficulty()
+{
+    if (difficulty == EASY)
+    {
+        snakeSpeed = 600;
+        growSize = 1;
+    }
+    if (difficulty == NORMAL)
+    {
+        snakeSpeed = 400;
+        growSize = 2;
+    }
+    if (difficulty == HARD)
+    {
+        snakeSpeed = 200;
+        growSize = 3;
+    }
 }
 
 Position GameManager::next_head()
@@ -36,69 +64,145 @@ Position GameManager::next_head()
     return pos;
 }
 
+bool GameManager::checkIfInSnake(Position ps)
+{
+    std::queue<Position> snakeCopy = snake;
+    Position currentPos;
+
+    while (!snakeCopy.empty())
+    {
+        currentPos = snakeCopy.front();
+        snakeCopy.pop();
+        if (currentPos.col == ps.col && currentPos.row == ps.row)
+            return true;
+    }
+    return false;
+}
+
+void GameManager::relocateApple()
+{
+    apple.col = rand() % BoardSizeCol;
+    apple.row = rand() % BoardSizeRow;
+
+    if (checkIfInSnake(apple))
+        relocateApple();
+}
+
+void GameManager::eatApple()
+{
+    pendingGrow += growSize;
+    relocateApple();
+}
+
+bool GameManager::checkCollision()
+{
+    Position nextHead = next_head();
+
+    if (nextHead.col >= BoardSizeCol)
+    {
+        state = FINISHED_LOSS;
+        return true;
+    }
+    if (nextHead.col < 0)
+    {
+        state = FINISHED_LOSS;
+        return true;
+    }
+    if (nextHead.row >= BoardSizeRow)
+    {
+        state = FINISHED_LOSS;
+        return true;
+    }
+    if (nextHead.row < 0)
+    {
+        state = FINISHED_LOSS;
+        return true;
+    }
+    if (checkIfInSnake(nextHead))
+    {
+        state = FINISHED_LOSS;
+        return true;
+    }
+    if (nextHead.col == apple.col && nextHead.row == apple.row)
+    {
+        eatApple();
+        return false;
+    }
+    return false;
+}
+
 void GameManager::turn(TurnSignal ts)
 {
-    if(ts == LEFT){
-        if(facing == NORTH)
+    if (ts == LEFT)
+    {
+        if (facing == NORTH)
             facing = WEST;
         else if (facing == WEST)
             facing = SOUTH;
-        else if(facing == SOUTH)
+        else if (facing == SOUTH)
             facing = EAST;
-        else if(facing == EAST)
+        else if (facing == EAST)
             facing = NORTH;
     }
     if (ts == RIGHT)
     {
         if (facing == NORTH)
             facing = EAST;
-        else if(facing == EAST)
+        else if (facing == EAST)
             facing = SOUTH;
-        else if(facing == SOUTH)
+        else if (facing == SOUTH)
             facing = WEST;
-        else if(facing == WEST)
+        else if (facing == WEST)
             facing = NORTH;
     }
 }
 
 void GameManager::update()
 {
-    snake.push(next_head());
-    if (pendingGrow == 0)
-        snake.pop();
-    else
-        pendingGrow--;
+    if (state == RUNNING)
+    {
+        if(!checkCollision()){
+            snake.push(next_head());
+            if (pendingGrow == 0)
+                snake.pop();
+            else
+                pendingGrow--;
+        }
+    }
 }
 
 void GameManager::snake_to_table()
 {
-    std::fill(board, board+1600, EMPTY);
+    std::fill(board, board + (BoardSizeCol * BoardSizeRow), EMPTY);
     std::queue<Position> snakeCopy = snake;
 
     Position currentPos;
 
-    while(!snakeCopy.empty()){
+    while (!snakeCopy.empty())
+    {
         currentPos = snakeCopy.front();
         snakeCopy.pop();
-        board[currentPos.row * 40 + currentPos.col] = SNAKE;
+        board[currentPos.row * BoardSizeCol + currentPos.col] = SNAKE;
     }
-    board[currentPos.row * 40 + currentPos.col] = SNAKE_HEAD;
+    board[currentPos.row * BoardSizeCol + currentPos.col] = SNAKE_HEAD;
+
+    board[apple.row * BoardSizeCol + apple.col] = APPLE;
 }
 
 void GameManager::debug_display()
 {
     snake_to_table();
-    for (int i = 0; i < 40; i++)
+    for (int i = 0; i < BoardSizeRow; i++)
     {
-        for (int j = 0; j < 40; j++)
+        for (int j = 0; j < BoardSizeCol; j++)
         {
-            if(board[i*40+j] == EMPTY)
+            if (board[i * BoardSizeCol + j] == EMPTY)
                 std::cout << "_";
-            if (board[i * 40 + j] == APPLE)
+            if (board[i * BoardSizeCol + j] == APPLE)
                 std::cout << "A";
-            if (board[i * 40 + j] == SNAKE)
+            if (board[i * BoardSizeCol + j] == SNAKE)
                 std::cout << "S";
-            if (board[i * 40 + j] == SNAKE_HEAD)
+            if (board[i * BoardSizeCol + j] == SNAKE_HEAD)
                 std::cout << "H";
         }
         std::cout << std::endl;

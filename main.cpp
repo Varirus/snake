@@ -6,10 +6,11 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Snake", sf::Style::Close);
+    srand(time(0));
+    sf::RenderWindow window(sf::VideoMode(BoardSizeRow * 20, BoardSizeCol * 20), "Snake", sf::Style::Close);
     window.setFramerateLimit(30);
 
-    GameManager manager;
+    GameManager manager(HARD);
     View view;
     Controller controller(window, manager, view);
 
@@ -17,18 +18,17 @@ int main()
     sf::Clock clock_turn;
     while (true)
     {
-        if (clock_turn.getElapsedTime().asMilliseconds() >= 2500)
+        if (clock_turn.getElapsedTime().asMilliseconds() >= 5500)
         {
             manager.turn(LEFT);
             clock_turn.restart();
         }
-        if (clock.getElapsedTime().asMilliseconds() >= 500)
+        if (clock.getElapsedTime().asMilliseconds() >= manager.getSnakeSpeed())
         {
             manager.update();
             manager.debug_display();
             clock.restart();
         }
-        
     }
     // for (int i = 0; i < 15; i++)
     // {
@@ -44,9 +44,8 @@ int main()
     //     manager.turn(LEFT);
     //     manager.debug_display();
     // }
-    
-    
+
     // manager.debug_display();
-    //controller.play();
+    // controller.play();
     return 0;
 }
