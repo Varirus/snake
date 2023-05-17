@@ -78,9 +78,9 @@ public:
     int getSnakeSpeed();
 
     /**
-            @brief Returns snake queue
+        @brief Returns snake queue
 
-            @return snake
+        @return snake
      */
     std::queue<Position> getSnake();
 
@@ -90,6 +90,14 @@ public:
         @return pendingTurn
      */
     TurnSignal getPendingTurn();
+
+    /**
+        @brief Returns apple position
+
+        @return apple position
+
+     */
+    Position getApplePosition();
 
     /**
         @brief Returns game state

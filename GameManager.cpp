@@ -20,6 +20,8 @@ std::queue<Position> GameManager::getSnake() { return snake; }
 
 TurnSignal GameManager::getPendingTurn() { return pendingTurn; }
 
+Position GameManager::getApplePosition() { return apple; }
+
 GameState GameManager::getGameState() { return state; }
 
 void GameManager::setPendingTurn(TurnSignal pt) { pendingTurn = pt; }

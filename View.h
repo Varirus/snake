@@ -28,7 +28,17 @@ public:
     void initShapes();
 
     /**
+           @brief Draws Snake
+
+           @param win RenderWindow
+
+     */
+    void drawSnake(sf::RenderWindow &win);
+
+    /**
            @brief Draws game on the window
+           
+           @param win RenderWindow
 
      */
     void display(sf::RenderWindow &win);

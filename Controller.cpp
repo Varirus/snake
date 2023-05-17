@@ -42,7 +42,8 @@ void Controller::play()
         }
 
         window.clear(sf::Color::Black);
-        // view.display(window);
+        
+        view.display(window);
 
         window.display();
     }
