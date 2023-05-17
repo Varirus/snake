@@ -15,6 +15,7 @@ enum DifficultyLevel
 
 enum GameState
 {
+    STOPPED,
     RUNNING,
     FINISHED_WIN,
     FINISHED_LOSS
@@ -39,7 +40,8 @@ enum Title
 enum TurnSignal
 {
     LEFT,
-    RIGHT
+    RIGHT,
+    NO_MOVE
 };
 
 struct Position
@@ -53,10 +55,11 @@ class GameManager
     std::queue<Position> snake;
     Title board[BoardSizeCol * BoardSizeRow]; // Board for Terminal/Debug display
     int snakeSpeed;                           // Snake's Speed
-    int pendingGrow;                          // Waiting growing size
+    int pendingGrow;                          // Pending grow size
     int growSize;                             // How many titles will snake grow upon eating apple
     Direction facing;                         // Snake's facing direction
     Position apple;                           // Apple's position
+    TurnSignal pendingTurn;                   // Pedning Turn Signal
     GameState state;                          // GameState (EASY|NORMAL|HARD)
     DifficultyLevel difficulty;               // GameState (RUNNING|FINISHED_LOSS|FINISHED_WIN)
 
@@ -75,6 +78,34 @@ public:
     int getSnakeSpeed();
 
     /**
+            @brief Returns snake queue
+
+            @return snake
+     */
+    std::queue<Position> getSnake();
+
+    /**
+        @brief Returns pendingTurn
+
+        @return pendingTurn
+     */
+    TurnSignal getPendingTurn();
+
+    /**
+        @brief Returns game state
+
+        @return game state (FINISHED_WIN|FINISHED_LOSS|RUNNING)
+     */
+    GameState getGameState();
+
+    /**
+        @brief Sets pendingTurn to desired TurnSignal
+
+        @param pt pendingTurn
+     */
+    void setPendingTurn(TurnSignal pt);
+
+    /**
         @brief Initializes snake
 
      */
@@ -85,6 +116,20 @@ public:
 
      */
     void init_gameDifficulty();
+
+    /**
+           @brief Changes Game Difficulty to desired one
+
+           @param diff game difficulty
+
+        */
+    void changeGameDifficulty(DifficultyLevel diff);
+
+    /**
+        @brief Starts Game
+
+     */
+    void startGame();
 
     /**
         @brief Calculates next Head Position

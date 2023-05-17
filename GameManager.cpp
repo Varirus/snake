@@ -4,26 +4,34 @@
 GameManager::GameManager(DifficultyLevel diff)
     : board(), difficulty(diff)
 {
-    state = RUNNING;
-    difficulty = HARD;
+    state = STOPPED;
     init_snake();
     init_gameDifficulty();
     relocateApple();
 
-    //DEBUG
-    apple.col = 23;
+    // DEBUG
+    apple.col = 0;
     apple.row = 20;
 }
 
 int GameManager::getSnakeSpeed() { return snakeSpeed; }
 
+std::queue<Position> GameManager::getSnake() { return snake; }
+
+TurnSignal GameManager::getPendingTurn() { return pendingTurn; }
+
+GameState GameManager::getGameState() { return state; }
+
+void GameManager::setPendingTurn(TurnSignal pt) { pendingTurn = pt; }
+
 void GameManager::init_snake()
 {
     Position starting;
-    starting.col = BoardSizeCol/2;
-    starting.row = BoardSizeRow/2;
+    starting.col = BoardSizeCol / 2;
+    starting.row = BoardSizeRow / 2;
     snake.push(starting);
     facing = EAST;
+    pendingTurn = NO_MOVE;
     pendingGrow = 5;
 }
 
@@ -31,19 +39,30 @@ void GameManager::init_gameDifficulty()
 {
     if (difficulty == EASY)
     {
-        snakeSpeed = 600;
+        snakeSpeed = 300;
         growSize = 1;
     }
     if (difficulty == NORMAL)
     {
-        snakeSpeed = 400;
+        snakeSpeed = 200;
         growSize = 2;
     }
     if (difficulty == HARD)
     {
-        snakeSpeed = 200;
+        snakeSpeed = 100;
         growSize = 3;
     }
+}
+
+void GameManager::changeGameDifficulty(DifficultyLevel diff)
+{
+    difficulty = diff;
+    init_gameDifficulty();
+}
+
+void GameManager::startGame()
+{
+    state = RUNNING;
 }
 
 Position GameManager::next_head()
@@ -52,9 +71,9 @@ Position GameManager::next_head()
     int col_update = 0;
     Position pos;
     if (facing == NORTH)
-        row_update = 1;
-    if (facing == SOUTH)
         row_update = -1;
+    if (facing == SOUTH)
+        row_update = 1;
     if (facing == WEST)
         col_update = -1;
     if (facing == EAST)
@@ -133,6 +152,9 @@ bool GameManager::checkCollision()
 
 void GameManager::turn(TurnSignal ts)
 {
+    pendingTurn = NO_MOVE;
+    if (ts == NO_MOVE)
+        return;
     if (ts == LEFT)
     {
         if (facing == NORTH)
@@ -161,7 +183,8 @@ void GameManager::update()
 {
     if (state == RUNNING)
     {
-        if(!checkCollision()){
+        if (!checkCollision())
+        {
             snake.push(next_head());
             if (pendingGrow == 0)
                 snake.pop();
@@ -192,6 +215,8 @@ void GameManager::snake_to_table()
 void GameManager::debug_display()
 {
     snake_to_table();
+    std::cout << "Snake x = " << next_head().col << " ,y = " << next_head().row << std::endl
+              << std::endl;
     for (int i = 0; i < BoardSizeRow; i++)
     {
         for (int j = 0; j < BoardSizeCol; j++)

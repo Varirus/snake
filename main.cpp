@@ -11,41 +11,26 @@ int main()
     window.setFramerateLimit(30);
 
     GameManager manager(HARD);
-    View view;
+    View view(manager);
     Controller controller(window, manager, view);
 
-    sf::Clock clock;
-    sf::Clock clock_turn;
-    while (true)
-    {
-        if (clock_turn.getElapsedTime().asMilliseconds() >= 5500)
-        {
-            manager.turn(LEFT);
-            clock_turn.restart();
-        }
-        if (clock.getElapsedTime().asMilliseconds() >= manager.getSnakeSpeed())
-        {
-            manager.update();
-            manager.debug_display();
-            clock.restart();
-        }
-    }
-    // for (int i = 0; i < 15; i++)
-    // {
-    //     manager.update();
-    //     manager.debug_display();
-    //     manager.update();
-    //     manager.debug_display();
-    //     manager.update();
-    //     manager.debug_display();
-    //     manager.update();
-    //     manager.debug_display();
-    //     manager.update();
-    //     manager.turn(LEFT);
-    //     manager.debug_display();
-    // }
+    controller.play();
 
-    // manager.debug_display();
-    // controller.play();
+    // sf::Clock clock;
+    // sf::Clock clock_turn;
+    // while (true)
+    // {
+    //     if (clock_turn.getElapsedTime().asMilliseconds() >= 5500)
+    //     {
+    //         manager.turn(LEFT);
+    //         clock_turn.restart();
+    //     }
+    //     if (clock.getElapsedTime().asMilliseconds() >= manager.getSnakeSpeed())
+    //     {
+    //         manager.update();
+    //         manager.debug_display();
+    //         clock.restart();
+    //     }
+    // }
     return 0;
 }

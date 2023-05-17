@@ -7,8 +7,8 @@
 class Controller
 {
     sf::RenderWindow &window; // Window
-    GameManager &manager;  // GameManager
-    View &view;        // View
+    GameManager &manager;     // GameManager
+    View &view;               // View
 
 public:
     /**
@@ -22,7 +22,7 @@ public:
 
     /**
         @brief Starts the game
-        
+
      */
     void play();
 };
