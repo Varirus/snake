@@ -21,6 +21,12 @@ public:
     Controller(sf::RenderWindow &w, GameManager &m, View &v);
 
     /**
+        @brief Shows menu
+
+     */
+    void show_menu();
+
+    /**
         @brief Starts the game
 
      */

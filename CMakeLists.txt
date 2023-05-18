@@ -21,6 +21,7 @@ set(project_sources
     Controller.cpp
     GameManager.cpp
     View.cpp
+    Scoreboard.cpp
 )
 
 # Create executable with all necessary source files

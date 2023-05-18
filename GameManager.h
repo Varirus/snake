@@ -2,9 +2,10 @@
 #define GAMEMANAGER_H
 #include <iostream>
 #include <queue>
+#include "Scoreboard.h"
 
-#define BoardSizeCol 40
-#define BoardSizeRow 40
+#define BoardSizeCol 20
+#define BoardSizeRow 20
 
 enum DifficultyLevel
 {
@@ -17,8 +18,7 @@ enum GameState
 {
     STOPPED,
     RUNNING,
-    FINISHED_WIN,
-    FINISHED_LOSS
+    FINISHED,
 };
 
 enum Direction
@@ -57,18 +57,23 @@ class GameManager
     int snakeSpeed;                           // Snake's Speed
     int pendingGrow;                          // Pending grow size
     int growSize;                             // How many titles will snake grow upon eating apple
+    int highscore;                            // Player's highscore
     Direction facing;                         // Snake's facing direction
     Position apple;                           // Apple's position
     TurnSignal pendingTurn;                   // Pedning Turn Signal
-    GameState state;                          // GameState (EASY|NORMAL|HARD)
-    DifficultyLevel difficulty;               // GameState (RUNNING|FINISHED_LOSS|FINISHED_WIN)
+    GameState state;                          // GameState (STOPPED|RUNNING|FINISHED)
+    DifficultyLevel difficulty;               // DifficultyLevel (EASY|NORMAL|HARD)
+    Scoreboard &scoreboard;                   // Scoreboard Controller
 
 public:
     /**
         @brief Construct a new GameManager object.
 
+        @param diff game difficulty level
+        @param sb Scoreboard
+
      */
-    GameManager(DifficultyLevel diff);
+    GameManager(DifficultyLevel diff, Scoreboard &sb);
 
     /**
         @brief Returns snake's speed
@@ -102,9 +107,16 @@ public:
     /**
         @brief Returns game state
 
-        @return game state (FINISHED_WIN|FINISHED_LOSS|RUNNING)
+        @return game state (FINISHED|RUNNING)
      */
     GameState getGameState();
+
+    /**
+        @brief Returns player's highscore
+
+        @return player's highscore
+     */
+    int getHighscore();
 
     /**
         @brief Sets pendingTurn to desired TurnSignal
@@ -131,13 +143,13 @@ public:
            @param diff game difficulty
 
         */
-    void changeGameDifficulty(DifficultyLevel diff);
+    void change_gameDifficulty(DifficultyLevel diff);
 
     /**
         @brief Starts Game
 
      */
-    void startGame();
+    void start_game();
 
     /**
         @brief Calculates next Head Position
@@ -146,7 +158,7 @@ public:
     Position next_head();
 
     /**
-        @brief Check if given position is snake
+        @brief Checks if given position is snake
 
         @param ps position
 
@@ -154,19 +166,19 @@ public:
         @return \b false - if given position is not in snake
 
      */
-    bool checkIfInSnake(Position ps);
+    bool check_if_in_snake(Position ps);
 
     /**
         @brief Relocates apple position
 
      */
-    void relocateApple();
+    void relocate_apple();
 
     /**
         @brief Relocates Apple, makes snake bigger
 
      */
-    void eatApple();
+    void eat_apple();
 
     /**
         @brief Checks if snake hit itself, is out of board or ate apple
@@ -174,7 +186,7 @@ public:
         @return \b true - if snake collision loses game
         @return \b false - if snake collision doesn't affect game
      */
-    bool checkCollision();
+    bool check_collision();
 
     /**
         @brief Changes Snake Direction

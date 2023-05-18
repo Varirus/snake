@@ -5,9 +5,28 @@ Controller::Controller(sf::RenderWindow &w, GameManager &m, View &v)
 {
 }
 
+void Controller::show_menu()
+{
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear(sf::Color::Black);
+
+        view.display_menu(window);
+
+        window.display();
+    }
+}
+
 void Controller::play()
 {
-    manager.startGame();
+    manager.start_game();
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -32,18 +51,23 @@ void Controller::play()
         {
             if (clock.getElapsedTime().asMilliseconds() >= manager.getSnakeSpeed())
             {
-                manager.update();
                 manager.turn(manager.getPendingTurn());
+                manager.update();
 
-                manager.debug_display();
+                //manager.debug_display();
 
                 clock.restart();
             }
         }
 
         window.clear(sf::Color::Black);
-        
-        view.display(window);
+
+        view.display_game(window);
+
+        if (manager.getGameState() == FINISHED)
+        {
+            view.display_scoreboard(window);
+        }
 
         window.display();
     }

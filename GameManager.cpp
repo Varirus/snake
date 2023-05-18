@@ -1,17 +1,14 @@
 #include "GameManager.h"
 #include <algorithm>
 
-GameManager::GameManager(DifficultyLevel diff)
-    : board(), difficulty(diff)
+GameManager::GameManager(DifficultyLevel diff, Scoreboard &sb)
+    : board(), difficulty(diff), scoreboard(sb)
 {
     state = STOPPED;
+    highscore = 0;
     init_snake();
     init_gameDifficulty();
-    relocateApple();
-
-    // DEBUG
-    apple.col = 0;
-    apple.row = 20;
+    relocate_apple();
 }
 
 int GameManager::getSnakeSpeed() { return snakeSpeed; }
@@ -23,6 +20,8 @@ TurnSignal GameManager::getPendingTurn() { return pendingTurn; }
 Position GameManager::getApplePosition() { return apple; }
 
 GameState GameManager::getGameState() { return state; }
+
+int GameManager::getHighscore() { return highscore; }
 
 void GameManager::setPendingTurn(TurnSignal pt) { pendingTurn = pt; }
 
@@ -41,28 +40,28 @@ void GameManager::init_gameDifficulty()
 {
     if (difficulty == EASY)
     {
-        snakeSpeed = 300;
+        snakeSpeed = 120;
         growSize = 1;
     }
     if (difficulty == NORMAL)
     {
-        snakeSpeed = 200;
+        snakeSpeed = 100;
         growSize = 2;
     }
     if (difficulty == HARD)
     {
-        snakeSpeed = 100;
+        snakeSpeed = 70;
         growSize = 3;
     }
 }
 
-void GameManager::changeGameDifficulty(DifficultyLevel diff)
+void GameManager::change_gameDifficulty(DifficultyLevel diff)
 {
     difficulty = diff;
     init_gameDifficulty();
 }
 
-void GameManager::startGame()
+void GameManager::start_game()
 {
     state = RUNNING;
 }
@@ -85,7 +84,7 @@ Position GameManager::next_head()
     return pos;
 }
 
-bool GameManager::checkIfInSnake(Position ps)
+bool GameManager::check_if_in_snake(Position ps)
 {
     std::queue<Position> snakeCopy = snake;
     Position currentPos;
@@ -100,53 +99,59 @@ bool GameManager::checkIfInSnake(Position ps)
     return false;
 }
 
-void GameManager::relocateApple()
+void GameManager::relocate_apple()
 {
     apple.col = rand() % BoardSizeCol;
     apple.row = rand() % BoardSizeRow;
 
-    if (checkIfInSnake(apple))
-        relocateApple();
+    if (check_if_in_snake(apple))
+        relocate_apple();
 }
 
-void GameManager::eatApple()
+void GameManager::eat_apple()
 {
     pendingGrow += growSize;
-    relocateApple();
+    highscore += growSize;
+    relocate_apple();
 }
 
-bool GameManager::checkCollision()
+bool GameManager::check_collision()
 {
     Position nextHead = next_head();
 
     if (nextHead.col >= BoardSizeCol)
     {
-        state = FINISHED_LOSS;
+        state = FINISHED;
+        scoreboard.add_new_score(highscore);
         return true;
     }
     if (nextHead.col < 0)
     {
-        state = FINISHED_LOSS;
+        state = FINISHED;
+        scoreboard.add_new_score(highscore);
         return true;
     }
     if (nextHead.row >= BoardSizeRow)
     {
-        state = FINISHED_LOSS;
+        state = FINISHED;
+        scoreboard.add_new_score(highscore);
         return true;
     }
     if (nextHead.row < 0)
     {
-        state = FINISHED_LOSS;
+        state = FINISHED;
+        scoreboard.add_new_score(highscore);
         return true;
     }
-    if (checkIfInSnake(nextHead))
+    if (check_if_in_snake(nextHead))
     {
-        state = FINISHED_LOSS;
+        state = FINISHED;
+        scoreboard.add_new_score(highscore);
         return true;
     }
     if (nextHead.col == apple.col && nextHead.row == apple.row)
     {
-        eatApple();
+        eat_apple();
         return false;
     }
     return false;
@@ -185,7 +190,7 @@ void GameManager::update()
 {
     if (state == RUNNING)
     {
-        if (!checkCollision())
+        if (!check_collision())
         {
             snake.push(next_head());
             if (pendingGrow == 0)
@@ -217,8 +222,8 @@ void GameManager::snake_to_table()
 void GameManager::debug_display()
 {
     snake_to_table();
-    std::cout << "Snake x = " << next_head().col << " ,y = " << next_head().row << std::endl
-              << std::endl;
+    std::cout << "Snake x = " << next_head().col << " , y = " << next_head().row << std::endl
+              << " , highscore = " << highscore << std::endl;
     for (int i = 0; i < BoardSizeRow; i++)
     {
         for (int j = 0; j < BoardSizeCol; j++)
