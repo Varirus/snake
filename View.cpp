@@ -10,37 +10,37 @@ View::View(GameManager &mgr, Scoreboard &sb)
 
 void View::init_sprites()
 {
-    if (!snakeTexture.loadFromFile("../snake.png"))
-        snakeTexture.loadFromFile("snake.png");
+    if (!snakeTexture.loadFromFile("../Resources/snake.png"))
+        snakeTexture.loadFromFile("Resources/snake.png");
     snakeTexture.setSmooth(true);
     snake.setTexture(snakeTexture);
 
-    if (!snakeHeadTexture.loadFromFile("../snakeHead.png"))
-        snakeHeadTexture.loadFromFile("snakeHead.png");
+    if (!snakeHeadTexture.loadFromFile("../Resources/snakeHead.png"))
+        snakeHeadTexture.loadFromFile("Resources/snakeHead.png");
     snakeHeadTexture.setSmooth(true);
     snakeHead.setTexture(snakeHeadTexture);
     snakeHead.setOrigin(sf::Vector2f(snakeHead.getLocalBounds().width / 2, snakeHead.getLocalBounds().height / 2));
 
-    if (!appleTexture.loadFromFile("../apple.png"))
-        appleTexture.loadFromFile("apple.png");
+    if (!appleTexture.loadFromFile("../Resources/apple.png"))
+        appleTexture.loadFromFile("Resources/apple.png");
     appleTexture.setSmooth(true);
     apple.setTexture(appleTexture);
 
-    if (!bgTexture.loadFromFile("../background.png"))
-        bgTexture.loadFromFile("background.png");
+    if (!bgTexture.loadFromFile("../Resources/background.png"))
+        bgTexture.loadFromFile("Resources/background.png");
     bg.setTexture(bgTexture);
     bg.setPosition(0, 0);
 
-    if (!menuTexture.loadFromFile("../menu.png"))
-        menuTexture.loadFromFile("menu.png");
+    if (!menuTexture.loadFromFile("../Resources/menu.png"))
+        menuTexture.loadFromFile("Resources/menu.png");
     menu.setTexture(menuTexture);
     menu.setPosition(0, 0);
 }
 
 void View::init_font()
 {
-    if (!font.loadFromFile("../pixel_font.ttf"))
-        font.loadFromFile("pixel_font.ttf");
+    if (!font.loadFromFile("../Resources/pixel_font.ttf"))
+        font.loadFromFile("Resources/pixel_font.ttf");
     highscoreText.setFont(font);
     highscoreText.setCharacterSize(30);
     highscoreText.setFillColor(sf::Color::White);
