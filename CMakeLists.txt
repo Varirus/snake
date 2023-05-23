@@ -29,4 +29,4 @@ add_executable(${PROJECT_NAME}
     ${project_sources})
 
 # Link SFML libraries
-target_link_libraries(${PROJECT_NAME} sfml-graphics)
+target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio)

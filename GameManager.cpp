@@ -4,7 +4,7 @@
 GameManager::GameManager(DifficultyLevel diff, Scoreboard &sb)
     : board(), difficulty(diff), scoreboard(sb)
 {
-    state = STOPPED;
+    stop_game();
     highscore = 0;
     init_snake();
     init_gameDifficulty();
@@ -23,6 +23,8 @@ GameState GameManager::getGameState() { return state; }
 
 int GameManager::getHighscore() { return highscore; }
 
+Direction GameManager::getFacing() { return facing; }
+
 void GameManager::setPendingTurn(TurnSignal pt) { pendingTurn = pt; }
 
 void GameManager::init_snake()
@@ -40,17 +42,17 @@ void GameManager::init_gameDifficulty()
 {
     if (difficulty == EASY)
     {
-        snakeSpeed = 120;
+        snakeSpeed = 160;
         growSize = 1;
     }
     if (difficulty == NORMAL)
     {
-        snakeSpeed = 100;
+        snakeSpeed = 120;
         growSize = 2;
     }
     if (difficulty == HARD)
     {
-        snakeSpeed = 70;
+        snakeSpeed = 80;
         growSize = 3;
     }
 }
@@ -64,6 +66,11 @@ void GameManager::change_gameDifficulty(DifficultyLevel diff)
 void GameManager::start_game()
 {
     state = RUNNING;
+}
+
+void GameManager::stop_game()
+{
+    state = PAUSED;
 }
 
 Position GameManager::next_head()

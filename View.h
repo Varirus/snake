@@ -7,17 +7,24 @@ class View
 {
 
     GameManager &manager;         // GameManager
-    Scoreboard &scoreboard;               // Scoreboard
+    Scoreboard &scoreboard;       // Scoreboard
 
-        sf::RectangleShape snake; // Snake Tail
-    sf::RectangleShape snakeHead; // Snake Head
+    sf::Sprite snake;             // Snake
+    sf::Texture snakeTexture;     // Snake Texture
+    sf::Sprite snakeHead;         // Snake Head
+    sf::Texture snakeHeadTexture; // Snake Head Texture
     sf::Sprite apple;             // Apple
     sf::Texture appleTexture;     // Apple Texture
     sf::Sprite bg;                // Background
     sf::Texture bgTexture;        // Background Texture
+    sf::Sprite menu;              // Menu
+    sf::Texture menuTexture;      // Menu Texture
     sf::Text highscoreText;       // Highscore Text
-    sf::Text finishedText;        // Victory/Defeat Text
+    sf::Text text;                // Information Text
     sf::Font font;                // Font
+
+    const int CellSize = 40;      // Defined CellSize
+
 
 public:
     /**
@@ -71,6 +78,14 @@ public:
 
      */
     void display_scoreboard(sf::RenderWindow &win);
+
+    /**
+           @brief Draws pause text
+
+           @param win RenderWindow
+
+     */
+    void display_pause(sf::RenderWindow &win);
 };
 
 #endif

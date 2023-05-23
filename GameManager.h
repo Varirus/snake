@@ -4,9 +4,6 @@
 #include <queue>
 #include "Scoreboard.h"
 
-#define BoardSizeCol 20
-#define BoardSizeRow 20
-
 enum DifficultyLevel
 {
     EASY,
@@ -16,7 +13,7 @@ enum DifficultyLevel
 
 enum GameState
 {
-    STOPPED,
+    PAUSED,
     RUNNING,
     FINISHED,
 };
@@ -53,7 +50,7 @@ struct Position
 class GameManager
 {
     std::queue<Position> snake;
-    Title board[BoardSizeCol * BoardSizeRow]; // Board for Terminal/Debug display
+    Title board[1600]; // Board for Terminal/Debug display
     int snakeSpeed;                           // Snake's Speed
     int pendingGrow;                          // Pending grow size
     int growSize;                             // How many titles will snake grow upon eating apple
@@ -61,9 +58,12 @@ class GameManager
     Direction facing;                         // Snake's facing direction
     Position apple;                           // Apple's position
     TurnSignal pendingTurn;                   // Pedning Turn Signal
-    GameState state;                          // GameState (STOPPED|RUNNING|FINISHED)
+    GameState state;                          // GameState (PAUSED|RUNNING|FINISHED)
     DifficultyLevel difficulty;               // DifficultyLevel (EASY|NORMAL|HARD)
     Scoreboard &scoreboard;                   // Scoreboard Controller
+
+    const int BoardSizeCol = 20;              // Defined number of columns
+    const int BoardSizeRow = 20;              // Defined number of rows
 
 public:
     /**
@@ -107,7 +107,7 @@ public:
     /**
         @brief Returns game state
 
-        @return game state (FINISHED|RUNNING)
+        @return game state (FINISHED|RUNNING|PAUSED)
      */
     GameState getGameState();
 
@@ -117,6 +117,13 @@ public:
         @return player's highscore
      */
     int getHighscore();
+
+    /**
+        @brief Returns snake's facing
+
+        @return snake's facing
+     */
+    Direction getFacing();
 
     /**
         @brief Sets pendingTurn to desired TurnSignal
@@ -150,6 +157,12 @@ public:
 
      */
     void start_game();
+
+    /**
+        @brief Stops Game
+
+     */
+    void stop_game();
 
     /**
         @brief Calculates next Head Position
@@ -191,7 +204,7 @@ public:
     /**
         @brief Changes Snake Direction
 
-        @param ts (LEFT|RIGHT)
+        @param ts (LEFT|RIGHT|NO_MOVE)
 
      */
     void turn(TurnSignal ts);

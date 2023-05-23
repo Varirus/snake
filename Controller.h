@@ -21,6 +21,16 @@ public:
     Controller(sf::RenderWindow &w, GameManager &m, View &v);
 
     /**
+        @brief Checks if mouse click was in one of play buttons
+
+        @param mouseX mouse X coordinate
+        @param mouseY mouse Y coordinate
+        @param diff desired difficulty
+
+     */
+    bool isInStartButton(int mouseX, int mouseY, DifficultyLevel diff);
+
+    /**
         @brief Shows menu
 
      */
