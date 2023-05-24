@@ -48,17 +48,17 @@ void Controller::show_menu()
                     if (isInStartButton(event.mouseButton.x, event.mouseButton.y, EASY))
                     {
                         manager.change_gameDifficulty(EASY);
-                        play();
+                        return;
                     }
                     if (isInStartButton(event.mouseButton.x, event.mouseButton.y, NORMAL))
                     {
                         manager.change_gameDifficulty(NORMAL);
-                        play();
+                        return;
                     }
                     if (isInStartButton(event.mouseButton.x, event.mouseButton.y, HARD))
                     {
                         manager.change_gameDifficulty(HARD);
-                        play();
+                        return;
                     }
                 }
             }
@@ -131,6 +131,11 @@ void Controller::play()
         if (manager.getGameState() == FINISHED)
         {
             view.display_scoreboard(window);
+            if (clock.getElapsedTime().asSeconds() >= 5)
+            {
+                manager.resetGame();
+                return;
+            }
         }
 
         window.display();

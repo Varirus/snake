@@ -16,17 +16,23 @@ ENDIF()
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
 # Create a list with all .cpp source files
-set(project_sources
-    main.cpp
-    Controller.cpp
-    GameManager.cpp
-    View.cpp
-    Scoreboard.cpp
+set(SOURCES
+    src/main.cpp
+    src/Controller.cpp
+    src/GameManager.cpp
+    src/View.cpp
+    src/Scoreboard.cpp
 )
 
 # Create executable with all necessary source files
 add_executable(${PROJECT_NAME}
-    ${project_sources})
+    ${SOURCES})
+
+# Include directories
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+)
 
 # Link SFML libraries
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio)

@@ -165,7 +165,15 @@ public:
     void stop_game();
 
     /**
+        @brief Resets game
+
+     */
+    void resetGame();
+
+    /**
         @brief Calculates next Head Position
+
+        @return next head position
 
      */
     Position next_head();

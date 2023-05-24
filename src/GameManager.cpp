@@ -4,11 +4,8 @@
 GameManager::GameManager(DifficultyLevel diff, Scoreboard &sb)
     : board(), difficulty(diff), scoreboard(sb)
 {
-    stop_game();
-    highscore = 0;
-    init_snake();
+    resetGame();
     init_gameDifficulty();
-    relocate_apple();
 }
 
 int GameManager::getSnakeSpeed() { return snakeSpeed; }
@@ -71,6 +68,15 @@ void GameManager::start_game()
 void GameManager::stop_game()
 {
     state = PAUSED;
+}
+
+void GameManager::resetGame(){
+    stop_game();
+    while (!snake.empty())
+        snake.pop();
+    highscore = 0;
+    init_snake();
+    relocate_apple();
 }
 
 Position GameManager::next_head()
