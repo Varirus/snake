@@ -15,10 +15,12 @@ int main()
     GameManager manager(NORMAL, scoreboard);
     View view(manager, scoreboard);
     Controller controller(window, manager, view);
-    while(window.isOpen()){
+
+    while (window.isOpen())
+    {
         controller.show_menu();
         controller.play();
     }
-    
+
     return 0;
 }

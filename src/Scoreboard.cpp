@@ -7,7 +7,7 @@ Scoreboard::Scoreboard(std::string name)
     load_from_file();
 }
 
-std::vector<int>::iterator Scoreboard::getScoreboardBegin(){ return scoreboard.begin(); }
+std::vector<int>::iterator Scoreboard::getScoreboardBegin() { return scoreboard.begin(); }
 
 std::vector<int>::iterator Scoreboard::getScoreboardEnd() { return scoreboard.end(); }
 
@@ -24,7 +24,8 @@ void Scoreboard::load_from_file()
         scoreboard.push_back(std::stoi(str));
     }
     in.close();
-    while(scoreboard.size() != 10){
+    while (scoreboard.size() != 10)
+    {
         scoreboard.push_back(0);
     }
 }
@@ -68,9 +69,8 @@ void Scoreboard::show()
     int j = 0;
     for (std::vector<int>::iterator i = scoreboard.begin(); i < scoreboard.end(); i++)
     {
-        //int score = *i.base();
-        std::cout << (j+1) << ". " << *i << std::endl;
+        // int score = *i.base();
+        std::cout << (j + 1) << ". " << *i << std::endl;
         j++;
-
     }
 }

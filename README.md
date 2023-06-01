@@ -12,8 +12,7 @@ After 3 seconds upon finishing the game, it will be restared and menu will be di
 
 ## Controls
 
-A or Left Arrow Key - turn left  
-D or Right Arrow Key - turn right  
+WASD or Arrow Keys - movement
 Escape - pause the game
 
 ## Author

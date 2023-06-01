@@ -25,10 +25,12 @@ public:
 
         @param mouseX mouse X coordinate
         @param mouseY mouse Y coordinate
-        @param diff desired difficulty
+        @param button desired button
 
+        @return \b true - if click is in desired button
+        @return \b false - if click is not in desired button
      */
-    bool isInStartButton(int mouseX, int mouseY, DifficultyLevel diff);
+    bool button_click(int mouseX, int mouseY, std::string button);
 
     /**
         @brief Shows menu

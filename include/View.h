@@ -6,25 +6,26 @@
 class View
 {
 
-    GameManager &manager;         // GameManager
-    Scoreboard &scoreboard;       // Scoreboard
+    GameManager &manager;   // GameManager
+    Scoreboard &scoreboard; // Scoreboard
 
     sf::Sprite snake;             // Snake
     sf::Texture snakeTexture;     // Snake Texture
     sf::Sprite snakeHead;         // Snake Head
     sf::Texture snakeHeadTexture; // Snake Head Texture
-    sf::Sprite apple;             // Apple
+    sf::Sprite snack;             // Snack
     sf::Texture appleTexture;     // Apple Texture
+    sf::Texture waterTexture;     // Water Texture
     sf::Sprite bg;                // Background
-    sf::Texture bgTexture;        // Background Texture
+    sf::Texture bgGrassTexture;   // Background Grass Texture
+    sf::Texture bgSandTexture;    // Background Sand Texture
     sf::Sprite menu;              // Menu
     sf::Texture menuTexture;      // Menu Texture
     sf::Text highscoreText;       // Highscore Text
     sf::Text text;                // Information Text
     sf::Font font;                // Font
 
-    const int CellSize = 40;      // Defined CellSize
-
+    const int CellSize = 40; // Defined CellSize
 
 public:
     /**
@@ -46,6 +47,14 @@ public:
 
      */
     void init_font();
+
+    /**
+           @brief Change Game Theme
+
+           @param board desired board
+
+     */
+    void change_theme(std::string board);
 
     /**
            @brief Draws Snake

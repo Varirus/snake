@@ -24,12 +24,18 @@ void View::init_sprites()
     if (!appleTexture.loadFromFile("../Resources/apple.png"))
         appleTexture.loadFromFile("Resources/apple.png");
     appleTexture.setSmooth(true);
-    apple.setTexture(appleTexture);
+    snack.setTexture(appleTexture);
 
-    if (!bgTexture.loadFromFile("../Resources/background.png"))
-        bgTexture.loadFromFile("Resources/background.png");
-    bg.setTexture(bgTexture);
+    if (!waterTexture.loadFromFile("../Resources/water.png"))
+        waterTexture.loadFromFile("Resources/water.png");
+
+    if (!bgGrassTexture.loadFromFile("../Resources/backgroundGrass.png"))
+        bgGrassTexture.loadFromFile("Resources/backgroundGrass.png");
+    bg.setTexture(bgGrassTexture);
     bg.setPosition(0, 0);
+
+    if (!bgSandTexture.loadFromFile("../Resources/backgroundSand.png"))
+        bgSandTexture.loadFromFile("Resources/backgroundSand.png");
 
     if (!menuTexture.loadFromFile("../Resources/menu.png"))
         menuTexture.loadFromFile("Resources/menu.png");
@@ -55,6 +61,22 @@ void View::init_font()
     text.setOutlineThickness(2);
     text.setOutlineColor(sf::Color::Black);
 }
+
+void View::change_theme(std::string board)
+{
+    if (board == "SAND")
+    {
+        bg.setTexture(bgSandTexture);
+        snack.setTexture(waterTexture);
+    }
+
+    if (board == "GRASS")
+    {
+        bg.setTexture(bgGrassTexture);
+        snack.setTexture(appleTexture);
+    }
+}
+
 void View::draw_snake(sf::RenderWindow &win)
 {
 
@@ -94,8 +116,8 @@ void View::display_game(sf::RenderWindow &win)
     highscoreText.setString(std::to_string(manager.getHighscore()));
     win.draw(highscoreText);
     draw_snake(win);
-    apple.setPosition(manager.getApplePosition().col * CellSize, manager.getApplePosition().row * CellSize);
-    win.draw(apple);
+    snack.setPosition(manager.getSnackPosition().col * CellSize, manager.getSnackPosition().row * CellSize);
+    win.draw(snack);
 }
 
 void View::display_scoreboard(sf::RenderWindow &win)

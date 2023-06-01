@@ -5,24 +5,44 @@ Controller::Controller(sf::RenderWindow &w, GameManager &m, View &v)
 {
 }
 
-bool Controller::isInStartButton(int mouseX, int mouseY, DifficultyLevel diff)
+bool Controller::button_click(int mouseX, int mouseY, std::string button)
 {
-    if(mouseY < 448 || mouseY > 564){
+    if (mouseY >= 586 && mouseY <= 650)
+    {
+        if (button == "GRASS")
+        {
+            if (mouseX >= 608 && mouseX <= 671)
+            {
+                return true;
+            }
+        }
+        if (button == "SAND")
+        {
+            if (mouseX >= 691 && mouseX <= 755)
+            {
+                return true;
+            }
+        }
+    }
+    if (mouseY < 448 || mouseY > 564)
+    {
         return false;
     }
-    if(diff == EASY){
-        if (mouseX >= 35 && mouseX <= 260){
+    if (button == "EASY")
+    {
+        if (mouseX >= 35 && mouseX <= 260)
+        {
             return true;
         }
     }
-    if (diff == NORMAL)
+    if (button == "NORMAL")
     {
         if (mouseX >= 291 && mouseX <= 516)
         {
             return true;
         }
     }
-    if (diff == HARD)
+    if (button == "HARD")
     {
         if (mouseX >= 542 && mouseX <= 767)
         {
@@ -45,20 +65,28 @@ void Controller::show_menu()
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if (isInStartButton(event.mouseButton.x, event.mouseButton.y, EASY))
+                    if (button_click(event.mouseButton.x, event.mouseButton.y, "EASY"))
                     {
                         manager.change_gameDifficulty(EASY);
                         return;
                     }
-                    if (isInStartButton(event.mouseButton.x, event.mouseButton.y, NORMAL))
+                    if (button_click(event.mouseButton.x, event.mouseButton.y, "NORMAL"))
                     {
                         manager.change_gameDifficulty(NORMAL);
                         return;
                     }
-                    if (isInStartButton(event.mouseButton.x, event.mouseButton.y, HARD))
+                    if (button_click(event.mouseButton.x, event.mouseButton.y, "HARD"))
                     {
                         manager.change_gameDifficulty(HARD);
                         return;
+                    }
+                    if (button_click(event.mouseButton.x, event.mouseButton.y, "GRASS"))
+                    {
+                        view.change_theme("GRASS");
+                    }
+                    if (button_click(event.mouseButton.x, event.mouseButton.y, "SAND"))
+                    {
+                        view.change_theme("SAND");
                     }
                 }
             }
@@ -85,16 +113,40 @@ void Controller::play()
                 window.close();
             if (event.type == sf::Event::KeyPressed)
             {
-                if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left)
+                // Movement
+                if (manager.getGameState() == RUNNING)
                 {
-                    if (manager.getGameState() == RUNNING)
-                        manager.setPendingTurn(LEFT);
+                    Direction facing = manager.getFacing();
+                    if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
+                    {
+                        if (facing == EAST)
+                            manager.setPendingTurn(LEFT);
+                        if (facing == WEST)
+                            manager.setPendingTurn(RIGHT);
+                    }
+                    if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left)
+                    {
+                        if (facing == NORTH)
+                            manager.setPendingTurn(LEFT);
+                        if (facing == SOUTH)
+                            manager.setPendingTurn(RIGHT);
+                    }
+                    if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
+                    {
+                        if (facing == EAST)
+                            manager.setPendingTurn(RIGHT);
+                        if (facing == WEST)
+                            manager.setPendingTurn(LEFT);
+                    }
+                    if (event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right)
+                    {
+                        if (facing == NORTH)
+                            manager.setPendingTurn(RIGHT);
+                        if (facing == SOUTH)
+                            manager.setPendingTurn(LEFT);
+                    }
                 }
-                if (event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right)
-                {
-                    if (manager.getGameState() == RUNNING)
-                        manager.setPendingTurn(RIGHT);
-                }
+                // Pause
                 if (event.key.code == sf::Keyboard::Escape)
                 {
 
@@ -112,8 +164,7 @@ void Controller::play()
             {
                 manager.turn(manager.getPendingTurn());
                 manager.update();
-
-                // manager.debug_display();
+                manager.debug_display();
 
                 clock.restart();
             }
@@ -121,13 +172,14 @@ void Controller::play()
 
         window.clear(sf::Color::Black);
 
+        // Game Display
         view.display_game(window);
 
+        // Pause Display
         if (manager.getGameState() == PAUSED)
-        {
             view.display_pause(window);
-        }
 
+        // Game Over Display
         if (manager.getGameState() == FINISHED)
         {
             view.display_scoreboard(window);

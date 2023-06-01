@@ -14,7 +14,7 @@ std::queue<Position> GameManager::getSnake() { return snake; }
 
 TurnSignal GameManager::getPendingTurn() { return pendingTurn; }
 
-Position GameManager::getApplePosition() { return apple; }
+Position GameManager::getSnackPosition() { return snack; }
 
 GameState GameManager::getGameState() { return state; }
 
@@ -70,13 +70,14 @@ void GameManager::stop_game()
     state = PAUSED;
 }
 
-void GameManager::resetGame(){
+void GameManager::resetGame()
+{
     stop_game();
     while (!snake.empty())
         snake.pop();
     highscore = 0;
     init_snake();
-    relocate_apple();
+    relocate_snack();
 }
 
 Position GameManager::next_head()
@@ -97,7 +98,7 @@ Position GameManager::next_head()
     return pos;
 }
 
-bool GameManager::check_if_in_snake(Position ps)
+bool GameManager::intersect_snake(Position ps)
 {
     std::queue<Position> snakeCopy = snake;
     Position currentPos;
@@ -112,20 +113,20 @@ bool GameManager::check_if_in_snake(Position ps)
     return false;
 }
 
-void GameManager::relocate_apple()
+void GameManager::relocate_snack()
 {
-    apple.col = rand() % BoardSizeCol;
-    apple.row = rand() % BoardSizeRow;
+    snack.col = rand() % BoardSizeCol;
+    snack.row = rand() % BoardSizeRow;
 
-    if (check_if_in_snake(apple))
-        relocate_apple();
+    if (intersect_snake(snack))
+        relocate_snack();
 }
 
-void GameManager::eat_apple()
+void GameManager::eat_snack()
 {
     pendingGrow += growSize;
     highscore += growSize;
-    relocate_apple();
+    relocate_snack();
 }
 
 bool GameManager::check_collision()
@@ -156,15 +157,15 @@ bool GameManager::check_collision()
         scoreboard.add_new_score(highscore);
         return true;
     }
-    if (check_if_in_snake(nextHead))
+    if (intersect_snake(nextHead))
     {
         state = FINISHED;
         scoreboard.add_new_score(highscore);
         return true;
     }
-    if (nextHead.col == apple.col && nextHead.row == apple.row)
+    if (nextHead.col == snack.col && nextHead.row == snack.row)
     {
-        eat_apple();
+        eat_snack();
         return false;
     }
     return false;
@@ -214,7 +215,7 @@ void GameManager::update()
     }
 }
 
-void GameManager::snake_to_table()
+void GameManager::snake_to_array()
 {
     std::fill(board, board + (BoardSizeCol * BoardSizeRow), EMPTY);
     std::queue<Position> snakeCopy = snake;
@@ -229,12 +230,12 @@ void GameManager::snake_to_table()
     }
     board[currentPos.row * BoardSizeCol + currentPos.col] = SNAKE_HEAD;
 
-    board[apple.row * BoardSizeCol + apple.col] = APPLE;
+    board[snack.row * BoardSizeCol + snack.col] = SNACK;
 }
 
 void GameManager::debug_display()
 {
-    snake_to_table();
+    snake_to_array();
     std::cout << "Snake x = " << next_head().col << " , y = " << next_head().row << std::endl
               << " , highscore = " << highscore << std::endl;
     for (int i = 0; i < BoardSizeRow; i++)
@@ -243,7 +244,7 @@ void GameManager::debug_display()
         {
             if (board[i * BoardSizeCol + j] == EMPTY)
                 std::cout << "_";
-            if (board[i * BoardSizeCol + j] == APPLE)
+            if (board[i * BoardSizeCol + j] == SNACK)
                 std::cout << "A";
             if (board[i * BoardSizeCol + j] == SNAKE)
                 std::cout << "S";

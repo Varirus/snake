@@ -26,12 +26,12 @@ enum Direction
     WEST
 };
 
-enum Title
+enum Tile
 {
     EMPTY,
     SNAKE,
     SNAKE_HEAD,
-    APPLE
+    SNACK
 };
 
 enum TurnSignal
@@ -50,20 +50,20 @@ struct Position
 class GameManager
 {
     std::queue<Position> snake;
-    Title board[1600]; // Board for Terminal/Debug display
-    int snakeSpeed;                           // Snake's Speed
-    int pendingGrow;                          // Pending grow size
-    int growSize;                             // How many titles will snake grow upon eating apple
-    int highscore;                            // Player's highscore
-    Direction facing;                         // Snake's facing direction
-    Position apple;                           // Apple's position
-    TurnSignal pendingTurn;                   // Pedning Turn Signal
-    GameState state;                          // GameState (PAUSED|RUNNING|FINISHED)
-    DifficultyLevel difficulty;               // DifficultyLevel (EASY|NORMAL|HARD)
-    Scoreboard &scoreboard;                   // Scoreboard Controller
+    Tile board[1600];           // Board for Terminal/Debug display
+    int snakeSpeed;             // Snake's Speed
+    int pendingGrow;            // Pending grow size
+    int growSize;               // How many titles will snake grow upon eating snack
+    int highscore;              // Player's highscore
+    Direction facing;           // Snake's facing direction
+    Position snack;             // snack's position
+    TurnSignal pendingTurn;     // Pedning Turn Signal
+    GameState state;            // GameState (PAUSED|RUNNING|FINISHED)
+    DifficultyLevel difficulty; // DifficultyLevel (EASY|NORMAL|HARD)
+    Scoreboard &scoreboard;     // Scoreboard Controller
 
-    const int BoardSizeCol = 20;              // Defined number of columns
-    const int BoardSizeRow = 20;              // Defined number of rows
+    const int BoardSizeCol = 20; // Defined number of columns
+    const int BoardSizeRow = 20; // Defined number of rows
 
 public:
     /**
@@ -97,12 +97,12 @@ public:
     TurnSignal getPendingTurn();
 
     /**
-        @brief Returns apple position
+        @brief Returns snack position
 
-        @return apple position
+        @return snack position
 
      */
-    Position getApplePosition();
+    Position getSnackPosition();
 
     /**
         @brief Returns game state
@@ -179,7 +179,7 @@ public:
     Position next_head();
 
     /**
-        @brief Checks if given position is snake
+        @brief Checks if given position intersects snake
 
         @param ps position
 
@@ -187,22 +187,22 @@ public:
         @return \b false - if given position is not in snake
 
      */
-    bool check_if_in_snake(Position ps);
+    bool intersect_snake(Position ps);
 
     /**
-        @brief Relocates apple position
+        @brief Relocates snack position
 
      */
-    void relocate_apple();
+    void relocate_snack();
 
     /**
-        @brief Relocates Apple, makes snake bigger
+        @brief Relocates snack, makes snake bigger
 
      */
-    void eat_apple();
+    void eat_snack();
 
     /**
-        @brief Checks if snake hit itself, is out of board or ate apple
+        @brief Checks if snake hit itself, is out of board or ate snack
 
         @return \b true - if snake collision loses game
         @return \b false - if snake collision doesn't affect game
@@ -224,10 +224,10 @@ public:
     void update();
 
     /**
-        @brief Transmition snake to board table
+        @brief Transmition snake to board array
 
      */
-    void snake_to_table();
+    void snake_to_array();
 
     /**
         @brief Prints debug diplay in terminal
