@@ -42,7 +42,7 @@ void View::init_sprites()
     menu.setTexture(menuTexture);
     menu.setPosition(0, 0);
 
-    if (menuSandTexture.loadFromFile("../Resources/menuSand.png"))
+    if (!menuSandTexture.loadFromFile("../Resources/menuSand.png"))
         menuSandTexture.loadFromFile("Resources/menuSand.png");
 }
 
