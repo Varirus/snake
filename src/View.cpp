@@ -41,6 +41,9 @@ void View::init_sprites()
         menuTexture.loadFromFile("Resources/menu.png");
     menu.setTexture(menuTexture);
     menu.setPosition(0, 0);
+
+    if (menuSandTexture.loadFromFile("../Resources/menuSand.png"))
+        menuSandTexture.loadFromFile("Resources/menuSand.png");
 }
 
 void View::init_font()
@@ -68,12 +71,14 @@ void View::change_theme(std::string board)
     {
         bg.setTexture(bgSandTexture);
         snack.setTexture(waterTexture);
+        menu.setTexture(menuSandTexture);
     }
 
     if (board == "GRASS")
     {
         bg.setTexture(bgGrassTexture);
         snack.setTexture(appleTexture);
+        menu.setTexture(menuTexture);
     }
 }
 

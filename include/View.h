@@ -21,6 +21,7 @@ class View
     sf::Texture bgSandTexture;    // Background Sand Texture
     sf::Sprite menu;              // Menu
     sf::Texture menuTexture;      // Menu Texture
+    sf::Texture menuSandTexture;      // Menu Sand Texture
     sf::Text highscoreText;       // Highscore Text
     sf::Text text;                // Information Text
     sf::Font font;                // Font

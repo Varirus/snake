@@ -19,7 +19,7 @@ int main()
     while (window.isOpen())
     {
         controller.show_menu();
-        controller.play();
+        controller.play(false);
     }
 
     return 0;

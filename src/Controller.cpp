@@ -100,7 +100,7 @@ void Controller::show_menu()
     }
 }
 
-void Controller::play()
+void Controller::play(bool debug)
 {
     manager.start_game();
     sf::Clock clock;
@@ -164,7 +164,8 @@ void Controller::play()
             {
                 manager.turn(manager.getPendingTurn());
                 manager.update();
-                manager.debug_display();
+                if(debug)
+                    manager.debug_display();
 
                 clock.restart();
             }

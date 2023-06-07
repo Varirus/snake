@@ -41,8 +41,10 @@ public:
     /**
         @brief Starts the game
 
+        @param debug True or False, turn on debug        
+
      */
-    void play();
+    void play(bool debug);
 };
 
 #endif
