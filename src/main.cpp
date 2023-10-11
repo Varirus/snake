@@ -7,6 +7,7 @@
 
 int main()
 {
+    //no elo
     srand(time(0));
     sf::RenderWindow window(sf::VideoMode(800, 800), "Snake", sf::Style::Close);
     window.setVerticalSyncEnabled(true);
